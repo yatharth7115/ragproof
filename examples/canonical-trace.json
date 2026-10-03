@@ -1,0 +1,416 @@
+{
+  "schema_version": "0.1.0",
+  "trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+  "tenant_id": "cuad-public",
+  "project_id": "cuad-contract-review",
+  "started_at": "2021-03-11T12:00:00Z",
+  "ended_at": "2021-03-11T12:00:00.009000Z",
+  "status": "ok",
+  "source": {
+    "provider": "opentelemetry",
+    "native_trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+    "adapter_name": "ragproof-otel-python",
+    "adapter_version": "0.1.0"
+  },
+  "pipeline": {
+    "fingerprint": "2517657377bf6d5a1c7e57886746d687db163b4cbd7a4f172c16344988d5970d",
+    "parser": {
+      "name": "cuad-text",
+      "version": "healthy",
+      "config_hash": "eac74bcf0376dbce9954f07b6f090c9976b417dae0711824070fe38b158dd156"
+    },
+    "chunker": {
+      "name": "character-window",
+      "version": "healthy",
+      "config_hash": "c8e8a067a6ed025c6d8fade918a72afbccd2351fc98a62049c3071ea1e3a20a8"
+    },
+    "embedder": {
+      "name": "hashed-64",
+      "version": "v1",
+      "config_hash": "971d391dd3285a2ee586171f537d6635ffbf5f8a05a3e277cf203740d9aa0f31"
+    },
+    "retriever": {
+      "name": "hybrid",
+      "version": "healthy",
+      "config_hash": "b2609432138257edf0d13eb38e1121187c861bbfaf73cd3871b1a4bd366c5eb7"
+    },
+    "reranker": {
+      "name": "policy",
+      "version": "healthy",
+      "config_hash": "7a4b95872aa88372e479b0c1151c88c2d418524968a07f60c2f2ae55e21f3744"
+    },
+    "prompt": {
+      "name": "cuad-clause-extraction",
+      "version": "v1",
+      "config_hash": "3fe6f006a4c7062efd38a48ad0801fae741bd8ca6287f3b7e70559a74bedde81"
+    },
+    "generator": {
+      "name": "deterministic-extractive",
+      "version": "corrupt_annotated_value",
+      "config_hash": "fc3ab64e65a162d7a4bfec78d2278a3b42143ce5c397e9bd8190dae741a7d3ea"
+    },
+    "citation": {
+      "name": "citation-linker",
+      "version": "healthy",
+      "config_hash": "3a353d13b82aff80d43ea76f312a4e0712a3e1ccc657ed0d6476aed0c54bdb98"
+    }
+  },
+  "knowledge_base": {
+    "data_source_id": "cuad-v1",
+    "corpus_version": "cuad-v1:current",
+    "index_version": "in-memory-hybrid:v1"
+  },
+  "query": {
+    "content_hash": "4fc0414f6243ad7e13b0ecd3155e86839be3d3edd6206c90381f605dc4e41dbd",
+    "content": "Highlight the parts (if any) of this contract related to \"Notice Period To Terminate Renewal\" that should be reviewed by a lawyer. Details: What is the notice period required to terminate renewal?"
+  },
+  "retrieval": {
+    "top_k": 6,
+    "candidates": [
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:28",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "ce454ec7b63bc6cc8b17fc841552cca8f131ce5a46e45c9d44309522a72aea02",
+        "retrieval_rank": 1,
+        "retrieval_score": 0.461458,
+        "rerank_rank": 2,
+        "rerank_score": 0.461458,
+        "included_in_context": false,
+        "content": " the agreement; (c) purchase orders; and (d) drawings and specifications. in the event of an irreconcilable conflict, discrepancy, error, or omission, the provision imposing the greater duty on subcontractor shall apply. materials or work described in words that have a well-known technical or trade meaning shall be held to refer to such recognized standards. 31. severability if any provision of this agreement is illegal or unenforceable, its invalidity shall not affect the other provision of this agreement that can be given effect without the invalid provision. if any provision of this agreement does not comply with any law, ordinance or regulation, such provision to the extent possible shall be interpreted in such a manner to comply with such law, ordinance or regulation, or if such interpretation is not possible, it shall be deemed to satisfy the minimum requirements thereof. all provisions required by law shall be deemed incorporated herein by reference. strategic alliance agreement \"edge-fte\" page 12 32. amendment this agreement may be amended or modified only by a written instrument executed by both edge and subcontractor. 33. right of replacement edge may, upon reasonable request, require subcontractor to replace any personnel, including a project manager, deployed by subcontractor under the terms of this agreement. subcontractor will replace any personnel promptly after "
+      },
+      {
+        "chunk_id": "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+        "document_id": "cuad-contract-99dea8d7575f",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e",
+        "retrieval_rank": 2,
+        "retrieval_score": 0.454042,
+        "rerank_rank": 1,
+        "rerank_score": 1.454042,
+        "included_in_context": true,
+        "content": "titute a criminal offense, give rise to civil liability, or otherwise violate any local, state, national, or international law. the customer expressly agrees to use all of i-on's services only for lawful purposes. transmission or storage of any information, data, or material in violation of united states or state regulation or law is prohibited, including but not limited to, material protected by copyright, trademark, trade secret, or any other statute. term and termination the term of this agreement for the hosted site shall commence upon april 1, 1999 and shall continue for a period of six (6) months, unless earlier terminated in accordance with provisions hereof. this agreement shall automatically be renewed for one (1) or more one (1) month periods unless either the customer or i-on gives notice to the other party of its intention not to renew the 4 agreement, which notice must be given not less than fifteen (15) days before the end of the respective initial or renewal term. either party may terminate this agreement without cause at any time effective upon thirty (30) days' written notice. notwithstanding anything to the contrary contained in this agreement, no termination of this agreement for any reason whatsoever shall relieve the customer of the obligation to pay all amounts due to i-on and to make such payments on a timely basis. limitation of liability i-on will not b"
+      },
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:1",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "0bfa8dcb754f981352a1fb62830b804ebb1f7a4176a4b793aec259bb128e9869",
+        "retrieval_rank": 3,
+        "retrieval_score": 0.451778,
+        "rerank_rank": 3,
+        "rerank_score": 0.451778,
+        "included_in_context": false,
+        "content": "erform its scope of work, in accordance with the terms and conditions of this in accordance with the terms and conditions of the respective issued purchase order(s). the work, as defined below, is a portion of the services to be provided by for a communications service provider mediacom, llc (the \"customer\"). 1. terms a. this agreement shall remain in effect for the duration of the initial term, unless earlier terminated pursuant to the provision entitled \"termination of agreement\". after the initial term, this agreement shall continue on a month to month basis until terminated by either party upon thirty (30) days prior written notice to the other setting forth the effective date of such termination. the termination of any purchase order shall not affect the obligations of either party to the other party pursuant to any other purchase order or to this agreement. the termination of this agreement shall terminate the obligations of either party to the other party pursuant to any purchase order and those obligations pursuant to this agreement, except as to obligations that are identified herein or in a terminated purchase order as surviving termination. b. should the agreement expire during the period of performance, all remaining work of each purchase order will be completed under the terms of the agreement then in effect on the date of award for each respective purchase order, "
+      },
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:16",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "fff54306037630dc24dcaebd1c6ac554cbfac283efe430d4399adf2e2e60bab6",
+        "retrieval_rank": 4,
+        "retrieval_score": 0.444618,
+        "rerank_rank": 4,
+        "rerank_score": 0.444618,
+        "included_in_context": false,
+        "content": "plicable law in connection with subcontractor's performance of work hereunder. subcontractor represents and warrants to edge that subcontractor's performance of this agreement will not violate any other employment, services, confidentiality, consulting or other agreement to which subcontractor is a party or by which it may be bound. 17. warranty a. subcontractor warrants to edge that the work will be performed with promptness and diligence and shall be executed in a quality manner consistent with workmanship standards in the particular trades involved. b. edge may accept any nonconforming work instead of requiring its removal and correction upon the condition that subcontractor shall pay edge an appropriate amount for damages and compensation as is mutually agreed upon by edge and subcontractor. warranty is not waived under such conditions. c. if within one (1) year from the date of completion of work acceptance, or within one (1) year from the completion of all other work or services and acceptance by edge (or within any longer materials warranty period as set forth above), any defects exists or arise, then in each case upon receipt of notice of such defect, subcontractor shall (unless edge chooses another remedy) promptly cause such defect(s) to be repaired or remedied at subcontractor's sole cost and expense, including but not limited to the costs of transportation, uncoveri"
+      },
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:13",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "61946dcc943ef37771878a2a64e97344bdbf2f5c945568133ee36b7b16a74be8",
+        "retrieval_rank": 5,
+        "retrieval_score": 0.43002,
+        "rerank_rank": 5,
+        "rerank_score": 0.43002,
+        "included_in_context": false,
+        "content": "nts of a default by subcontractor hereunder: strategic alliance agreement \"edge-fte\" page 5 1) subcontractor fails to supply a sufficient number of skilled workers or suitable materials or equipment for performance of the work; 2) subcontractor fails to make payments to its lower-tier subcontractors or employees or laborers for labor, material or equipment; 3) subcontractor disregards laws, ordinances, rules, regulations or orders of any public authority; 4) any lower-tier subcontractor files a (i) notice of intention to file a construction or mechanic's lien, (ii) mechanic's lien, or (iii) construction lien, and such filing is not removed by subcontractor within three (3) days after the period required by this agreement; 5) subcontractor makes a general assignment for the benefit of its creditors, a receiver or liquidator shall be appointed for subcontractor or for any of its property, or subcontractor or its creditors initiate bankruptcy proceedings (11 u.s.c.a.) with respect to subcontractor; or 6) subcontractor otherwise violates any provision of this agreement. b. remedies for subcontractor's default the cost of completion by edge in the event of a termination based on the occurrence of any of the conditions specified in section 11(a) above shall be deducted from the unpaid balance, if any, then due subcontractor under the agreement. 12. suspension of work edge shall have "
+      },
+      {
+        "chunk_id": "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:29",
+        "document_id": "cuad-contract-f71b4149a185",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "e28b14cd8d4445b5733e7d6891eaa8eb480447f875238eee30087764ea82788f",
+        "retrieval_rank": 6,
+        "retrieval_score": 0.423428,
+        "rerank_rank": 6,
+        "rerank_score": 0.423428,
+        "included_in_context": false,
+        "content": "under and which has the economic ability to perform its obligations hereunder. upon the assignment of a party's interest and rights in this agreement the assigning party shall be relieved of all further obligations imposed by this agreement. 6.2 nonwaiver of rights. failure of either party to enforce any of the provisions of this agreement or any rights with respect thereto or failure to exercise any election provided for herein shall in no way be a waiver of such provisions, rights or elections or in any way affect the validity of this agreement. the failure of either party to exercise any of said provisions, rights or elections shall not preclude or prejudice such party from later enforcing or exercising the same or any other provisions, rights or elections which is may have under this agreement. 6.3 invalid provisions. if any terms, provision, covenant, or condition of this agreement is held by a court of competent jurisdiction to be invalid, void, or unenforceable, the remainder of the provisions shall remain in full force and effect and shall in no way be affected, impaired or invalidated. 6.4 notices. any notice or other communication required or permitted hereunder shall be in writing and shall be delivered personally, telegraphed, telexed, or sent by facsimile transmission or sent by certified, registered or express mail, postage prepaid. any such notice shall be deemed"
+      }
+    ]
+  },
+  "generation": {
+    "response_id": "e795758aa7cf98b7c88c1f19615bf1ef04548419a48001e53c36be9c1d349a28",
+    "response": {
+      "content_hash": "6208931ad22e663e651e1f68fc7ed8a93fbfa8499421fd99cc6f287b14864b49",
+      "content": "Agreement, which notice must be given not less than thirty (30) days before the end of the respective initial or renewal term."
+    },
+    "model_provider": "ragproof-lab",
+    "model_name": "deterministic-extractive:corrupt_annotated_value",
+    "input_tokens": 266,
+    "output_tokens": 22,
+    "citations": [
+      {
+        "chunk_id": "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+        "document_id": "cuad-contract-99dea8d7575f",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "content_hash": "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e",
+        "content": "titute a criminal offense, give rise to civil liability, or otherwise violate any local, state, national, or international law. the customer expressly agrees to use all of i-on's services only for lawful purposes. transmission or storage of any information, data, or material in violation of united states or state regulation or law is prohibited, including but not limited to, material protected by copyright, trademark, trade secret, or any other statute. term and termination the term of this agreement for the hosted site shall commence upon april 1, 1999 and shall continue for a period of six (6) months, unless earlier terminated in accordance with provisions hereof. this agreement shall automatically be renewed for one (1) or more one (1) month periods unless either the customer or i-on gives notice to the other party of its intention not to renew the 4 agreement, which notice must be given not less than fifteen (15) days before the end of the respective initial or renewal term. either party may terminate this agreement without cause at any time effective upon thirty (30) days' written notice. notwithstanding anything to the contrary contained in this agreement, no termination of this agreement for any reason whatsoever shall relieve the customer of the obligation to pay all amounts due to i-on and to make such payments on a timely basis. limitation of liability i-on will not b"
+      }
+    ]
+  },
+  "privacy": {
+    "capture_mode": "full",
+    "redaction_applied": false,
+    "content_retention_days": 30
+  },
+  "spans": [
+    {
+      "span_id": "7d828fc05dd01f39",
+      "parent_span_id": null,
+      "name": "rag.request",
+      "started_at": "2021-03-11T12:00:00Z",
+      "ended_at": "2021-03-11T12:00:00.001000Z",
+      "status": "unset",
+      "attributes": {
+        "ragproof.tenant.id": "cuad-public",
+        "ragproof.project.id": "cuad-contract-review",
+        "ragproof.scenario.name": "generation_failure",
+        "ragproof.capture.mode": "full",
+        "gen_ai.data_source.id": "cuad-v1"
+      }
+    },
+    {
+      "span_id": "a3d5df100970e8ac",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "document.parse",
+      "started_at": "2021-03-11T12:00:00.001000Z",
+      "ended_at": "2021-03-11T12:00:00.002000Z",
+      "status": "unset",
+      "attributes": {
+        "ragproof.component.version": "cuad-text:healthy",
+        "ragproof.document.count": 3,
+        "ragproof.document.ids": [
+          "cuad-contract-99dea8d7575f",
+          "cuad-contract-f71b4149a185",
+          "cuad-contract-2e55ecc57f22"
+        ],
+        "ragproof.parsed_block.count": 3
+      }
+    },
+    {
+      "span_id": "7a0d873d232f55f2",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "document.chunk",
+      "started_at": "2021-03-11T12:00:00.002000Z",
+      "ended_at": "2021-03-11T12:00:00.003000Z",
+      "status": "unset",
+      "attributes": {
+        "ragproof.component.version": "character-window:healthy",
+        "ragproof.chunk.count": 80,
+        "ragproof.chunk.ids": [
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:0",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:1",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:2",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:3",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:4",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:5",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:6",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:7",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:9",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:10",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:11",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:12",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:0",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:1",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:2",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:3",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:4",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:5",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:6",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:7",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:8",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:9",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:10",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:11",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:12",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:13",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:14",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:15",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:16",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:17",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:18",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:19",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:20",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:21",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:22",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:23",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:24",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:25",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:26",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:27",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:28",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:29",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:30",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:31",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:32",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:33",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:0",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:1",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:2",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:3",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:4",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:5",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:6",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:7",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:8",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:9",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:10",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:11",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:12",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:13",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:14",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:15",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:16",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:17",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:18",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:19",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:20",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:21",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:22",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:23",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:24",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:25",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:26",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:27",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:28",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:29",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:30",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:31",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:32"
+        ]
+      }
+    },
+    {
+      "span_id": "bf42dc7c532e60af",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "embedding.create",
+      "started_at": "2021-03-11T12:00:00.003000Z",
+      "ended_at": "2021-03-11T12:00:00.004000Z",
+      "status": "unset",
+      "attributes": {
+        "gen_ai.operation.name": "embeddings",
+        "gen_ai.provider.name": "ragproof-lab",
+        "gen_ai.request.model": "hashed-64:v1",
+        "ragproof.embedding.dimension": 64,
+        "ragproof.chunk.count": 80
+      }
+    },
+    {
+      "span_id": "c7b1f3c41164aa7d",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "retrieval.search",
+      "started_at": "2021-03-11T12:00:00.004000Z",
+      "ended_at": "2021-03-11T12:00:00.005000Z",
+      "status": "unset",
+      "attributes": {
+        "ragproof.component.version": "hybrid:healthy",
+        "ragproof.query.sha256": "4fc0414f6243ad7e13b0ecd3155e86839be3d3edd6206c90381f605dc4e41dbd",
+        "ragproof.query.content": "Highlight the parts (if any) of this contract related to \"Notice Period To Terminate Renewal\" that should be reviewed by a lawyer. Details: What is the notice period required to terminate renewal?",
+        "ragproof.retrieval.chunk_ids": [
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:28",
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:1",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:16",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:13",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:29"
+        ],
+        "ragproof.retrieval.scores": [
+          0.461458,
+          0.454042,
+          0.451778,
+          0.444618,
+          0.43002,
+          0.423428
+        ]
+      }
+    },
+    {
+      "span_id": "e8ad087d65dc7c0a",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "retrieval.rerank",
+      "started_at": "2021-03-11T12:00:00.005000Z",
+      "ended_at": "2021-03-11T12:00:00.006000Z",
+      "status": "unset",
+      "attributes": {
+        "ragproof.component.version": "policy:healthy",
+        "ragproof.rerank.chunk_ids": [
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:28",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:1",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:16",
+          "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:13",
+          "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:29"
+        ]
+      }
+    },
+    {
+      "span_id": "5159119a25095086",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "prompt.construct",
+      "started_at": "2021-03-11T12:00:00.006000Z",
+      "ended_at": "2021-03-11T12:00:00.007000Z",
+      "status": "unset",
+      "attributes": {
+        "ragproof.component.version": "cuad-clause-extraction:v1",
+        "ragproof.context.chunk_ids": [
+          "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8"
+        ],
+        "ragproof.context.sha256": "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e",
+        "ragproof.context.content": "titute a criminal offense, give rise to civil liability, or otherwise violate any local, state, national, or international law. the customer expressly agrees to use all of i-on's services only for lawful purposes. transmission or storage of any information, data, or material in violation of united states or state regulation or law is prohibited, including but not limited to, material protected by copyright, trademark, trade secret, or any other statute. term and termination the term of this agreement for the hosted site shall commence upon april 1, 1999 and shall continue for a period of six (6) months, unless earlier terminated in accordance with provisions hereof. this agreement shall automatically be renewed for one (1) or more one (1) month periods unless either the customer or i-on gives notice to the other party of its intention not to renew the 4 agreement, which notice must be given not less than fifteen (15) days before the end of the respective initial or renewal term. either party may terminate this agreement without cause at any time effective upon thirty (30) days' written notice. notwithstanding anything to the contrary contained in this agreement, no termination of this agreement for any reason whatsoever shall relieve the customer of the obligation to pay all amounts due to i-on and to make such payments on a timely basis. limitation of liability i-on will not b"
+      }
+    },
+    {
+      "span_id": "204920fac14a6cc9",
+      "parent_span_id": "7d828fc05dd01f39",
+      "name": "llm.generate",
+      "started_at": "2021-03-11T12:00:00.007000Z",
+      "ended_at": "2021-03-11T12:00:00.008000Z",
+      "status": "unset",
+      "attributes": {
+        "gen_ai.operation.name": "chat",
+        "gen_ai.provider.name": "ragproof-lab",
+        "gen_ai.request.model": "deterministic-extractive:v1",
+        "ragproof.response.sha256": "6208931ad22e663e651e1f68fc7ed8a93fbfa8499421fd99cc6f287b14864b49",
+        "ragproof.response.abstained": false,
+        "ragproof.citation.chunk_id": "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+        "ragproof.response.content": "Agreement, which notice must be given not less than thirty (30) days before the end of the respective initial or renewal term."
+      }
+    }
+  ],
+  "extensions": {
+    "cuad": {
+      "dataset": "CUAD v1",
+      "license": "CC BY 4.0",
+      "primary_document_id": "cuad-contract-99dea8d7575f",
+      "current_document_version": "cuad-v1:f8161d18bea4"
+    },
+    "evaluation_ground_truth": {
+      "source": "CUAD human annotation",
+      "expected_evidence_hash": "ecb66b0c87e6fc08fd621dec8225418a7bdf4adf9bbaed7c8e3543d39d053ba0",
+      "source_contains_evidence": true,
+      "parse_contains_evidence": true,
+      "chunk_contains_evidence": true,
+      "retrieval_contains_evidence": true,
+      "context_contains_evidence": true
+    },
+    "controlled_test": {
+      "scenario": "generation_failure",
+      "source_content_modified": false,
+      "ground_truth_source": "CUAD human annotation"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1.0",
+  "gate_run_id": "1234567890abcdef1234567890abcdef",
+  "tenant_id": "cuad-public",
+  "project_id": "cuad-contract-review",
+  "started_at": "2026-09-13T08:00:00+00:00",
+  "completed_at": "2026-09-13T08:00:01+00:00",
+  "gate": {
+    "name": "ragproof-quality-gate",
+    "version": "confirmed-regressions-0.1.0"
+  },
+  "candidate": {
+    "name": "main",
+    "pipeline_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "configuration": {
+      "name": "main",
+      "injected_fault": null,
+      "parser_mode": "healthy",
+      "chunker_mode": "healthy",
+      "retriever_mode": "healthy",
+      "reranker_mode": "healthy",
+      "generator_mode": "healthy",
+      "citation_mode": "healthy",
+      "corpus_mode": "current"
+    }
+  },
+  "source": {
+    "dataset": "CUAD v1",
+    "license": "CC BY 4.0",
+    "selection": "newest_confirmed_case_per_query_and_category"
+  },
+  "policy": {
+    "minimum_cases": 1,
+    "minimum_pass_rate": 1.0,
+    "required_categories": ["GENERATION_FAILURE"]
+  },
+  "summary": {
+    "total_cases": 1,
+    "passed_cases": 1,
+    "failed_cases": 0,
+    "pass_rate": 1.0,
+    "present_categories": ["GENERATION_FAILURE"],
+    "missing_categories": [],
+    "policy_failures": []
+  },
+  "case_results": [
+    {
+      "case_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "category": "GENERATION_FAILURE",
+      "query_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "candidate_trace_id": "0123456789abcdef0123456789abcdef",
+      "candidate_pipeline_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "verdicts": ["SUPPORTED"],
+      "citation_supported": true,
+      "passed": true,
+      "failures": []
+    }
+  ],
+  "outcome": "PASS"
+}

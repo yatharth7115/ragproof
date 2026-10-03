@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1.0",
+  "summary": {
+    "total": 1,
+    "status_counts": {
+      "confirmed": 1,
+      "needs_review": 0,
+      "rejected": 0,
+      "replaying": 0,
+      "suspected": 0
+    },
+    "category_counts": {
+      "GENERATION_FAILURE": 1
+    }
+  },
+  "page": {
+    "total": 1,
+    "limit": 100,
+    "offset": 0
+  },
+  "incidents": [
+    {
+      "diagnosis_id": "7ab9768a906df85e03e71b83edfe3b6379a8236abac2354b7b46a6f4dbf74279",
+      "trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+      "response_id": "e795758aa7cf98b7c88c1f19615bf1ef04548419a48001e53c36be9c1d349a28",
+      "status": "confirmed",
+      "category": "GENERATION_FAILURE",
+      "component": "generator",
+      "confidence": 0.98,
+      "created_at": "2021-03-11T12:00:00Z",
+      "claim_count": 1,
+      "verdict_counts": {
+        "CONTRADICTED": 1
+      },
+      "replay": {
+        "replay_id": "8ba76a95b5ea67badbb1e0048e674fd0c6531e38e8761ebd98156d295ab89e9e",
+        "outcome": "CONFIRMED"
+      },
+      "regression_case_id": "339ec3a4b2c19e563d3e9f9ac1d0ffa9c00a0f31bd0c89d49443b97a25593e31"
+    }
+  ]
+}

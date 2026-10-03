@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/change-impact.schema.json",
+  "title": "RAGProof Document Change Impact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "impact_id", "change_id", "tenant_id", "project_id",
+    "document_id", "change", "summary", "affected_traces"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "impact_id": { "$ref": "#/$defs/id" },
+    "change_id": { "$ref": "#/$defs/id" },
+    "tenant_id": { "$ref": "#/$defs/id" },
+    "project_id": { "$ref": "#/$defs/id" },
+    "document_id": { "$ref": "#/$defs/id" },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from_version", "to_version", "version_changed", "content_change",
+        "from_chunk_hashes", "to_chunk_hashes"
+      ],
+      "properties": {
+        "from_version": { "type": "string", "minLength": 1 },
+        "to_version": { "type": "string", "minLength": 1 },
+        "version_changed": { "type": "boolean" },
+        "content_change": {
+          "type": "string",
+          "enum": ["changed", "unchanged", "unknown"]
+        },
+        "from_chunk_hashes": {
+          "type": "array", "items": { "$ref": "#/$defs/hash" }, "uniqueItems": true
+        },
+        "to_chunk_hashes": {
+          "type": "array", "items": { "$ref": "#/$defs/hash" }, "uniqueItems": true
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "affected_trace_count", "affected_answer_count", "affected_claim_count",
+        "confirmed_incident_count"
+      ],
+      "properties": {
+        "affected_trace_count": { "type": "integer", "minimum": 0 },
+        "affected_answer_count": { "type": "integer", "minimum": 0 },
+        "affected_claim_count": { "type": "integer", "minimum": 0 },
+        "confirmed_incident_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "affected_traces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "trace_id", "response_id", "usage_modes", "claim_ids", "diagnoses"
+        ],
+        "properties": {
+          "trace_id": { "$ref": "#/$defs/id" },
+          "response_id": { "$ref": "#/$defs/id" },
+          "usage_modes": {
+            "type": "array",
+            "items": { "enum": ["context", "retrieved_only", "citation"] },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "claim_ids": {
+            "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true
+          },
+          "diagnoses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["diagnosis_id", "category", "status"],
+              "properties": {
+                "diagnosis_id": { "$ref": "#/$defs/id" },
+                "category": { "type": "string", "minLength": 1 },
+                "status": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+  }
+}

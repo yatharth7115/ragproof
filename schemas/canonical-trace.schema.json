@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/canonical-trace.schema.json",
+  "title": "RAGProof Canonical RAG Trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trace_id",
+    "tenant_id",
+    "project_id",
+    "started_at",
+    "ended_at",
+    "source",
+    "pipeline",
+    "knowledge_base",
+    "query",
+    "retrieval",
+    "generation",
+    "privacy",
+    "spans"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "tenant_id": { "$ref": "#/$defs/id" },
+    "project_id": { "$ref": "#/$defs/id" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["ok", "error", "cancelled"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "adapter_name", "adapter_version"],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["opentelemetry", "langfuse", "langsmith"]
+        },
+        "native_trace_id": { "type": "string", "minLength": 1 },
+        "adapter_name": { "type": "string", "minLength": 1 },
+        "adapter_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fingerprint", "parser", "chunker", "embedder", "retriever", "reranker", "prompt", "generator", "citation"],
+      "properties": {
+        "fingerprint": { "$ref": "#/$defs/hash" },
+        "parser": { "$ref": "#/$defs/component" },
+        "chunker": { "$ref": "#/$defs/component" },
+        "embedder": { "$ref": "#/$defs/component" },
+        "retriever": { "$ref": "#/$defs/component" },
+        "reranker": { "$ref": "#/$defs/component" },
+        "prompt": { "$ref": "#/$defs/component" },
+        "generator": { "$ref": "#/$defs/component" },
+        "citation": { "$ref": "#/$defs/component" }
+      }
+    },
+    "knowledge_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_source_id", "corpus_version", "index_version"],
+      "properties": {
+        "data_source_id": { "$ref": "#/$defs/id" },
+        "corpus_version": { "type": "string", "minLength": 1 },
+        "index_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "query": { "$ref": "#/$defs/contentObject" },
+    "retrieval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["top_k", "candidates"],
+      "properties": {
+        "top_k": { "type": "integer", "minimum": 1 },
+        "candidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/candidate" }
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["response_id", "response", "model_provider", "model_name"],
+      "properties": {
+        "response_id": { "$ref": "#/$defs/id" },
+        "response": { "$ref": "#/$defs/contentObject" },
+        "model_provider": { "type": "string", "minLength": 1 },
+        "model_name": { "type": "string", "minLength": 1 },
+        "input_tokens": { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/citation" }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capture_mode", "redaction_applied", "content_retention_days"],
+      "properties": {
+        "capture_mode": {
+          "type": "string",
+          "enum": ["full", "redacted", "metadata_only"]
+        },
+        "redaction_applied": { "type": "boolean" },
+        "content_retention_days": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "spans": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/span" }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "config_hash"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "config_hash": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "contentObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["content_hash"],
+      "properties": {
+        "content": { "type": "string" },
+        "content_hash": { "$ref": "#/$defs/hash" },
+        "content_ref": { "type": "string", "minLength": 1 }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chunk_id",
+        "document_id",
+        "document_version",
+        "content_hash",
+        "retrieval_rank",
+        "included_in_context"
+      ],
+      "properties": {
+        "chunk_id": { "$ref": "#/$defs/id" },
+        "document_id": { "$ref": "#/$defs/id" },
+        "document_version": { "type": "string", "minLength": 1 },
+        "content": { "type": "string" },
+        "content_hash": { "$ref": "#/$defs/hash" },
+        "content_ref": { "type": "string", "minLength": 1 },
+        "retrieval_rank": { "type": "integer", "minimum": 1 },
+        "retrieval_score": { "type": "number" },
+        "rerank_rank": { "type": ["integer", "null"], "minimum": 1 },
+        "rerank_score": { "type": ["number", "null"] },
+        "included_in_context": { "type": "boolean" }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chunk_id", "document_id", "document_version", "content_hash"],
+      "properties": {
+        "chunk_id": { "$ref": "#/$defs/id" },
+        "document_id": { "$ref": "#/$defs/id" },
+        "document_version": { "type": "string", "minLength": 1 },
+        "content": { "type": "string" },
+        "content_hash": { "$ref": "#/$defs/hash" },
+        "content_ref": { "type": "string", "minLength": 1 }
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["span_id", "parent_span_id", "name", "started_at", "ended_at", "status", "attributes"],
+      "properties": {
+        "span_id": { "type": "string", "pattern": "^[a-fA-F0-9]{16}$" },
+        "parent_span_id": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[a-fA-F0-9]{16}$" },
+            { "type": "null" }
+          ]
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "rag.request",
+            "document.parse",
+            "document.chunk",
+            "embedding.create",
+            "retrieval.search",
+            "retrieval.rerank",
+            "prompt.construct",
+            "llm.generate",
+            "ragproof.evaluate"
+          ]
+        },
+        "started_at": { "type": "string", "format": "date-time" },
+        "ended_at": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["unset", "ok", "error"] },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              { "type": ["string", "boolean", "integer", "number"] },
+              {
+                "type": "array",
+                "items": {
+                  "type": ["string", "boolean", "integer", "number"]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

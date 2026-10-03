@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/diagnosis.schema.json",
+  "title": "RAGProof Root-Cause Diagnosis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "diagnosis_id",
+    "trace_id",
+    "claim_ids",
+    "status",
+    "primary_hypothesis",
+    "observations",
+    "recommended_experiment",
+    "recommended_action"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "diagnosis_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "claim_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/id" },
+      "uniqueItems": true
+    },
+    "status": {
+      "type": "string",
+      "enum": ["suspected", "replaying", "confirmed", "rejected", "needs_review"]
+    },
+    "primary_hypothesis": { "$ref": "#/$defs/hypothesis" },
+    "alternative_hypotheses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hypothesis" }
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "recommended_experiment": { "type": "string", "minLength": 1 },
+    "recommended_action": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "category": {
+      "type": "string",
+      "enum": [
+        "PARSING_FAILURE",
+        "CHUNKING_FAILURE",
+        "RETRIEVAL_FAILURE",
+        "RERANKING_FAILURE",
+        "GENERATION_FAILURE",
+        "CITATION_FAILURE",
+        "STALE_KNOWLEDGE",
+        "UNDETERMINED"
+      ]
+    },
+    "hypothesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "component", "confidence"],
+      "properties": {
+        "category": { "$ref": "#/$defs/category" },
+        "component": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

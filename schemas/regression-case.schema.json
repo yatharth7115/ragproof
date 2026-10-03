@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/regression-case.schema.json",
+  "title": "RAGProof Regression Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "case_id", "source", "incident", "input",
+    "failure", "passing_reference", "expectations"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "case_id": { "$ref": "#/$defs/id" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset", "license"],
+      "properties": {
+        "dataset": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 }
+      }
+    },
+    "incident": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["diagnosis_id", "replay_id", "category"],
+      "properties": {
+        "diagnosis_id": { "$ref": "#/$defs/id" },
+        "replay_id": { "$ref": "#/$defs/id" },
+        "category": { "type": "string", "minLength": 1 }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["original_trace_id", "query_hash"],
+      "properties": {
+        "original_trace_id": { "$ref": "#/$defs/id" },
+        "query_hash": { "$ref": "#/$defs/hash" },
+        "query_ref": { "type": "string", "minLength": 1 }
+      }
+    },
+    "failure": { "$ref": "#/$defs/runReference" },
+    "passing_reference": { "$ref": "#/$defs/runReference" },
+    "expectations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptable_verdicts", "citation_must_support"],
+      "properties": {
+        "acceptable_verdicts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["SUPPORTED", "STALE_EVIDENCE"] },
+          "uniqueItems": true
+        },
+        "citation_must_support": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "runReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trace_id", "pipeline_fingerprint", "response_hash", "verdicts"],
+      "properties": {
+        "trace_id": { "$ref": "#/$defs/id" },
+        "pipeline_fingerprint": { "$ref": "#/$defs/hash" },
+        "response_hash": { "$ref": "#/$defs/hash" },
+        "verdicts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

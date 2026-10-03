@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/replay-result.schema.json",
+  "title": "RAGProof Differential Replay Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "replay_id",
+    "diagnosis_id",
+    "original_trace_id",
+    "changed_variable",
+    "baseline",
+    "candidate",
+    "outcome",
+    "observations"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "replay_id": { "$ref": "#/$defs/id" },
+    "diagnosis_id": { "$ref": "#/$defs/id" },
+    "original_trace_id": { "$ref": "#/$defs/id" },
+    "changed_variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "from_value", "to_value"],
+      "properties": {
+        "component": { "type": "string", "minLength": 1 },
+        "from_value": { "type": "string", "minLength": 1 },
+        "to_value": { "type": "string", "minLength": 1 }
+      }
+    },
+    "baseline": { "$ref": "#/$defs/run" },
+    "candidate": { "$ref": "#/$defs/run" },
+    "outcome": {
+      "type": "string",
+      "enum": ["CONFIRMED", "REJECTED", "NEEDS_REVIEW"]
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "PARTIALLY_SUPPORTED",
+        "UNSUPPORTED",
+        "CONTRADICTED",
+        "INSUFFICIENT_CONTEXT",
+        "STALE_EVIDENCE"
+      ]
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trace_id",
+        "pipeline_fingerprint",
+        "response_hash",
+        "verdicts",
+        "all_claims_supported"
+      ],
+      "properties": {
+        "trace_id": { "$ref": "#/$defs/id" },
+        "pipeline_fingerprint": { "$ref": "#/$defs/hash" },
+        "response_hash": { "$ref": "#/$defs/hash" },
+        "verdicts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/verdict" }
+        },
+        "all_claims_supported": { "type": "boolean" },
+        "citation_supported": { "type": ["boolean", "null"] },
+        "reproduced_original": { "type": "boolean" }
+      }
+    }
+  }
+}

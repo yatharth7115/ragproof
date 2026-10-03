@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ragproof-mvp"
+version = "0.1.0"
+description = "RAGProof contracts and controlled RAG failure laboratory"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "opentelemetry-api>=1.36,<2",
+  "opentelemetry-sdk>=1.36,<2",
+]
+
+[project.scripts]
+ragproof-lab = "ragproof_lab.cli:main"
+ragproof-capture = "ragproof_otel.cli:main"
+ragproof-verify-worker = "ragproof_verifier.cli:main"
+ragproof-diagnose-worker = "ragproof_diagnosis.cli:main"
+ragproof-replay-worker = "ragproof_replay.cli:main"
+ragproof-regression-worker = "ragproof_impact.cli:main"
+ragproof-gate = "ragproof_gate.cli:main"
+ragproof-migrate = "ragproof_store.migrations:main"
+ragproof-evaluate = "ragproof_verifier.evaluate:main"
+ragproof-admin = "ragproof_store.admin:main"
+ragproof-import = "ragproof_integrations.cli:main"
+ragproof-outbox-worker = "ragproof_store.delivery:main"
+ragproof-backup = "ragproof_store.backup:main"
+
+[project.optional-dependencies]
+integrations = ["httpx>=0.27,<1", "jsonschema>=4.23,<5"]
+langsmith = ["langsmith>=0.3,<1"]
+dev = [
+  "httpx>=0.27,<1",
+  "jsonschema>=4.23,<5",
+]
+api = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.30,<1",
+]
+otlp = [
+  "opentelemetry-exporter-otlp-proto-http>=1.36,<2",
+  "opentelemetry-proto>=1.36,<2",
+]
+storage = [
+  "boto3>=1.35,<2",
+  "jsonschema>=4.23,<5",
+  "psycopg[binary]>=3.2,<4",
+  "redis>=5,<7",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ragproof_store = ["schema.sql", "migration_sql/*.sql", "static/*"]
+ragproof_resources = ["schemas/*.json", "fixtures/*.json", "THIRD_PARTY_NOTICES.md"]

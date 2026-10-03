@@ -1,0 +1,99 @@
+name: ragproof
+
+x-app: &app
+  build:
+    context: ..
+  image: ragproof:local
+  restart: unless-stopped
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp:size=64M,mode=1777
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  environment: &app-environment
+    RAGPROOF_POSTGRES_DSN: ${RAGPROOF_POSTGRES_DSN:?Set the internal PostgreSQL DSN in your env file}
+    RAGPROOF_REDIS_URL: redis://redis:6379/0
+    RAGPROOF_S3_ENDPOINT_URL: http://minio:9000
+    RAGPROOF_S3_ACCESS_KEY: ${RAGPROOF_S3_ACCESS_KEY:?Set object-storage credentials}
+    RAGPROOF_S3_SECRET_KEY: ${RAGPROOF_S3_SECRET_KEY:?Set object-storage credentials}
+    RAGPROOF_S3_BUCKET: ${RAGPROOF_S3_BUCKET:-ragproof-content}
+    RAGPROOF_AUTH_MODE: token
+    RAGPROOF_API_KEYS_JSON: ${RAGPROOF_API_KEYS_JSON:?Configure hashed tenant/project API keys}
+    RAGPROOF_SESSION_SECRET: ${RAGPROOF_SESSION_SECRET:?Set a random session signing secret}
+    RAGPROOF_COOKIE_SECURE: ${RAGPROOF_COOKIE_SECURE:-true}
+  depends_on:
+    postgres: {condition: service_healthy}
+    redis: {condition: service_healthy}
+    minio: {condition: service_healthy}
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: "3"}
+
+services:
+  api:
+    <<: *app
+    ports: ["127.0.0.1:${RAGPROOF_HTTP_PORT:-8080}:8080"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/ready', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+  verify:
+    <<: *app
+    command: [ragproof-verify-worker]
+  diagnose:
+    <<: *app
+    command: [ragproof-diagnose-worker]
+  replay:
+    <<: *app
+    command: [ragproof-replay-worker]
+  regression:
+    <<: *app
+    command: [ragproof-regression-worker]
+  outbox:
+    <<: *app
+    command: [ragproof-outbox-worker]
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ragproof
+      POSTGRES_USER: ragproof
+      POSTGRES_PASSWORD: ${RAGPROOF_DB_PASSWORD:?Set a random PostgreSQL password}
+    volumes: ["postgres:/var/lib/postgresql/data"]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U ragproof -d ragproof"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:7.4.11-alpine
+    restart: unless-stopped
+    command: [redis-server, --appendonly, "yes", --maxmemory-policy, noeviction]
+    volumes: ["redis:/data"]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    restart: unless-stopped
+    command: [server, /data]
+    environment:
+      MINIO_ROOT_USER: ${RAGPROOF_S3_ACCESS_KEY:?Set object-storage credentials}
+      MINIO_ROOT_PASSWORD: ${RAGPROOF_S3_SECRET_KEY:?Set object-storage credentials}
+    volumes: ["minio:/data"]
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:9000/minio/health/live]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  postgres:
+  redis:
+  minio:

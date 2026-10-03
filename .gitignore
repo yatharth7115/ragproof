@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+*.egg-info/
+
+# JavaScript
+node_modules/
+.next/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime data and captured content
+data/
+artifacts/
+traces/
+replays/
+*.sqlite
+*.db
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1.0",
+  "diagnosis_id": "7ab9768a906df85e03e71b83edfe3b6379a8236abac2354b7b46a6f4dbf74279",
+  "trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+  "claim_ids": [
+    "b64499d4267e46e9c03016fe3c2442a2054ea34c1cefa068f41c95d0090447b0"
+  ],
+  "status": "suspected",
+  "primary_hypothesis": {
+    "category": "GENERATION_FAILURE",
+    "component": "generator",
+    "confidence": 0.98
+  },
+  "alternative_hypotheses": [],
+  "observations": [
+    "Relevant evidence reached the model context, but at least one answer claim is not fully supported."
+  ],
+  "recommended_experiment": "Regenerate from the identical captured context with a controlled generator or prompt change.",
+  "recommended_action": "Do not mark the cause confirmed until a one-variable replay or human review agrees."
+}

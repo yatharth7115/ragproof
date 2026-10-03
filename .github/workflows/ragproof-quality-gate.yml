@@ -1,0 +1,50 @@
+name: RAGProof quality gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  real-data-quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install RAGProof
+        run: python -m pip install -e '.[dev,api,otlp,storage]'
+
+      - name: Start the data plane
+        run: docker compose -f infrastructure/docker-compose.lab.yml up -d --wait
+
+      - name: Run real-CUAD integration suite
+        env:
+          RAGPROOF_RUN_STORAGE_INTEGRATION: "1"
+        run: python -m unittest discover -s tests -v
+
+      - name: Promote all confirmed real-data replays
+        run: ragproof-regression-worker --backfill-confirmed
+
+      - name: Enforce confirmed-regression gate
+        run: >-
+          ragproof-gate
+          --candidate-name "github-${{ github.sha }}"
+          --minimum-cases 7
+          --minimum-pass-rate 1.0
+          --required-category PARSING_FAILURE
+          --required-category CHUNKING_FAILURE
+          --required-category RETRIEVAL_FAILURE
+          --required-category RERANKING_FAILURE
+          --required-category GENERATION_FAILURE
+          --required-category CITATION_FAILURE
+          --required-category STALE_KNOWLEDGE
+
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose -f infrastructure/docker-compose.lab.yml logs --no-color

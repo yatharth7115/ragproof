@@ -1,0 +1,203 @@
+{
+  "schema_version": "0.1.0",
+  "diagnosis": {
+    "schema_version": "0.1.0",
+    "diagnosis_id": "7ab9768a906df85e03e71b83edfe3b6379a8236abac2354b7b46a6f4dbf74279",
+    "trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+    "claim_ids": [
+      "b64499d4267e46e9c03016fe3c2442a2054ea34c1cefa068f41c95d0090447b0"
+    ],
+    "status": "confirmed",
+    "primary_hypothesis": {
+      "category": "GENERATION_FAILURE",
+      "component": "generator",
+      "confidence": 0.98
+    },
+    "alternative_hypotheses": [],
+    "observations": [
+      "Relevant evidence reached the model context, but at least one answer claim is not fully supported."
+    ],
+    "recommended_experiment": "Regenerate from the identical captured context with a controlled generator or prompt change.",
+    "recommended_action": "Do not mark the cause confirmed until a one-variable replay or human review agrees."
+  },
+  "verification": {
+    "status": "completed",
+    "trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+    "response_id": "e795758aa7cf98b7c88c1f19615bf1ef04548419a48001e53c36be9c1d349a28",
+    "evaluator": {
+      "name": "ragproof-claim-verifier",
+      "version": "lexical-numeric-0.1.1"
+    },
+    "claims": [
+      {
+        "claim_id": "b64499d4267e46e9c03016fe3c2442a2054ea34c1cefa068f41c95d0090447b0",
+        "verdict": "CONTRADICTED",
+        "confidence": 1.0,
+        "evidence": [
+          {
+            "chunk_id": "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+            "relation": "contradicts",
+            "document_version": "cuad-v1:f8161d18bea4",
+            "freshness": "current"
+          }
+        ],
+        "judge_disagreement": false
+      }
+    ]
+  },
+  "replay": {
+    "schema_version": "0.1.0",
+    "replay_id": "8ba76a95b5ea67badbb1e0048e674fd0c6531e38e8761ebd98156d295ab89e9e",
+    "diagnosis_id": "7ab9768a906df85e03e71b83edfe3b6379a8236abac2354b7b46a6f4dbf74279",
+    "original_trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+    "changed_variable": {
+      "component": "generator",
+      "from_value": "corrupt_annotated_value",
+      "to_value": "healthy"
+    },
+    "baseline": {
+      "trace_id": "77ade721fb3ee36b02d9fac985888109",
+      "pipeline_fingerprint": "2517657377bf6d5a1c7e57886746d687db163b4cbd7a4f172c16344988d5970d",
+      "response_hash": "6208931ad22e663e651e1f68fc7ed8a93fbfa8499421fd99cc6f287b14864b49",
+      "verdicts": [
+        "CONTRADICTED"
+      ],
+      "all_claims_supported": false,
+      "citation_supported": false,
+      "reproduced_original": true
+    },
+    "candidate": {
+      "trace_id": "60462443aace01fa145bf3ff86ff4fb8",
+      "pipeline_fingerprint": "5c5576af6b57fbb3370fad7ca22eb9e06b2edef93e4beb34898fdb76784b9249",
+      "response_hash": "ecb66b0c87e6fc08fd621dec8225418a7bdf4adf9bbaed7c8e3543d39d053ba0",
+      "verdicts": [
+        "SUPPORTED"
+      ],
+      "all_claims_supported": true,
+      "citation_supported": true
+    },
+    "outcome": "CONFIRMED",
+    "observations": [
+      "The unchanged baseline reproduced the original outcome.",
+      "Changing only the diagnosed component removed the observed failure."
+    ]
+  },
+  "regression_case": {
+    "schema_version": "0.1.0",
+    "case_id": "339ec3a4b2c19e563d3e9f9ac1d0ffa9c00a0f31bd0c89d49443b97a25593e31",
+    "source": {
+      "dataset": "CUAD v1",
+      "license": "CC BY 4.0"
+    },
+    "incident": {
+      "diagnosis_id": "7ab9768a906df85e03e71b83edfe3b6379a8236abac2354b7b46a6f4dbf74279",
+      "replay_id": "8ba76a95b5ea67badbb1e0048e674fd0c6531e38e8761ebd98156d295ab89e9e",
+      "category": "GENERATION_FAILURE"
+    },
+    "input": {
+      "original_trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+      "query_hash": "4fc0414f6243ad7e13b0ecd3155e86839be3d3edd6206c90381f605dc4e41dbd"
+    },
+    "failure": {
+      "trace_id": "77ade721fb3ee36b02d9fac985888109",
+      "pipeline_fingerprint": "2517657377bf6d5a1c7e57886746d687db163b4cbd7a4f172c16344988d5970d",
+      "response_hash": "6208931ad22e663e651e1f68fc7ed8a93fbfa8499421fd99cc6f287b14864b49",
+      "verdicts": [
+        "CONTRADICTED"
+      ]
+    },
+    "passing_reference": {
+      "trace_id": "60462443aace01fa145bf3ff86ff4fb8",
+      "pipeline_fingerprint": "5c5576af6b57fbb3370fad7ca22eb9e06b2edef93e4beb34898fdb76784b9249",
+      "response_hash": "ecb66b0c87e6fc08fd621dec8225418a7bdf4adf9bbaed7c8e3543d39d053ba0",
+      "verdicts": [
+        "SUPPORTED"
+      ]
+    },
+    "expectations": {
+      "acceptable_verdicts": [
+        "SUPPORTED"
+      ],
+      "citation_must_support": true
+    }
+  },
+  "lineage": {
+    "trace_id": "67a58ac9f2c648bcfca4104ddf6d16b6",
+    "response_id": "e795758aa7cf98b7c88c1f19615bf1ef04548419a48001e53c36be9c1d349a28",
+    "query_hash": "4fc0414f6243ad7e13b0ecd3155e86839be3d3edd6206c90381f605dc4e41dbd",
+    "response_hash": "6208931ad22e663e651e1f68fc7ed8a93fbfa8499421fd99cc6f287b14864b49",
+    "pipeline_fingerprint": "2517657377bf6d5a1c7e57886746d687db163b4cbd7a4f172c16344988d5970d",
+    "corpus_version": "cuad-v1:current",
+    "index_version": "in-memory-hybrid:v1",
+    "candidates": [
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:28",
+        "content_hash": "ce454ec7b63bc6cc8b17fc841552cca8f131ce5a46e45c9d44309522a72aea02",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "included_in_context": false
+      },
+      {
+        "chunk_id": "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+        "content_hash": "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e",
+        "document_id": "cuad-contract-99dea8d7575f",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "included_in_context": true
+      },
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:1",
+        "content_hash": "0bfa8dcb754f981352a1fb62830b804ebb1f7a4176a4b793aec259bb128e9869",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "included_in_context": false
+      },
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:16",
+        "content_hash": "fff54306037630dc24dcaebd1c6ac554cbfac283efe430d4399adf2e2e60bab6",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "included_in_context": false
+      },
+      {
+        "chunk_id": "cuad-contract-2e55ecc57f22:cuad-v1:f8161d18bea4:block:0:chunk:13",
+        "content_hash": "61946dcc943ef37771878a2a64e97344bdbf2f5c945568133ee36b7b16a74be8",
+        "document_id": "cuad-contract-2e55ecc57f22",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "included_in_context": false
+      },
+      {
+        "chunk_id": "cuad-contract-f71b4149a185:cuad-v1:f8161d18bea4:block:0:chunk:29",
+        "content_hash": "e28b14cd8d4445b5733e7d6891eaa8eb480447f875238eee30087764ea82788f",
+        "document_id": "cuad-contract-f71b4149a185",
+        "document_version": "cuad-v1:f8161d18bea4",
+        "included_in_context": false
+      }
+    ],
+    "citations": [
+      {
+        "chunk_id": "cuad-contract-99dea8d7575f:cuad-v1:f8161d18bea4:block:0:chunk:8",
+        "content_hash": "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e",
+        "document_id": "cuad-contract-99dea8d7575f",
+        "document_version": "cuad-v1:f8161d18bea4"
+      }
+    ]
+  },
+  "impact_reports": [],
+  "timeline": [
+    {
+      "status": "suspected",
+      "replay_id": null,
+      "changed_at": "2021-03-11T12:00:00Z"
+    },
+    {
+      "status": "replaying",
+      "replay_id": null,
+      "changed_at": "2021-03-11T12:00:00Z"
+    },
+    {
+      "status": "confirmed",
+      "replay_id": "8ba76a95b5ea67badbb1e0048e674fd0c6531e38e8761ebd98156d295ab89e9e",
+      "changed_at": "2021-03-11T12:00:00Z"
+    }
+  ]
+}

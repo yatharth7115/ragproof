@@ -1,0 +1,6 @@
+include THIRD_PARTY_NOTICES.md
+include README.md
+recursive-include schemas *.json
+recursive-include fixtures *.json
+recursive-include src/ragproof_store *.sql
+recursive-include src/ragproof_store/static *

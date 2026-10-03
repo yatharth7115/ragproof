@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/quality-gate-result.schema.json",
+  "title": "RAGProof Quality Gate Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "gate_run_id", "tenant_id", "project_id",
+    "started_at", "completed_at", "gate", "candidate", "source",
+    "policy", "summary", "case_results", "outcome"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "gate_run_id": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+    "tenant_id": { "$ref": "#/$defs/id" },
+    "project_id": { "$ref": "#/$defs/id" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/id" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "configuration"],
+      "properties": {
+        "name": { "$ref": "#/$defs/id" },
+        "pipeline_fingerprint": { "$ref": "#/$defs/hash" },
+        "configuration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name", "injected_fault", "parser_mode", "chunker_mode",
+            "retriever_mode", "reranker_mode", "generator_mode",
+            "citation_mode", "corpus_mode"
+          ],
+          "properties": {
+            "name": { "$ref": "#/$defs/id" },
+            "injected_fault": { "type": ["string", "null"] },
+            "parser_mode": { "$ref": "#/$defs/id" },
+            "chunker_mode": { "$ref": "#/$defs/id" },
+            "retriever_mode": { "$ref": "#/$defs/id" },
+            "reranker_mode": { "$ref": "#/$defs/id" },
+            "generator_mode": { "$ref": "#/$defs/id" },
+            "citation_mode": { "$ref": "#/$defs/id" },
+            "corpus_mode": { "$ref": "#/$defs/id" }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset", "license", "selection"],
+      "properties": {
+        "dataset": { "const": "CUAD v1" },
+        "license": { "const": "CC BY 4.0" },
+        "selection": { "const": "newest_confirmed_case_per_query_and_category" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_cases", "minimum_pass_rate", "required_categories"],
+      "properties": {
+        "minimum_cases": { "type": "integer", "minimum": 1 },
+        "minimum_pass_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "required_categories": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_cases", "passed_cases", "failed_cases", "pass_rate",
+        "present_categories", "missing_categories", "policy_failures"
+      ],
+      "properties": {
+        "total_cases": { "type": "integer", "minimum": 0 },
+        "passed_cases": { "type": "integer", "minimum": 0 },
+        "failed_cases": { "type": "integer", "minimum": 0 },
+        "pass_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "present_categories": { "$ref": "#/$defs/uniqueIds" },
+        "missing_categories": { "$ref": "#/$defs/uniqueIds" },
+        "policy_failures": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "minimum_cases_not_met", "minimum_pass_rate_not_met",
+              "required_categories_missing"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "case_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id", "category", "query_hash", "verdicts",
+          "citation_supported", "passed", "failures"
+        ],
+        "properties": {
+          "case_id": { "$ref": "#/$defs/hash" },
+          "category": { "$ref": "#/$defs/id" },
+          "query_hash": { "$ref": "#/$defs/hash" },
+          "candidate_trace_id": { "$ref": "#/$defs/id" },
+          "candidate_pipeline_fingerprint": { "$ref": "#/$defs/hash" },
+          "verdicts": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/id" }
+          },
+          "citation_supported": { "type": ["boolean", "null"] },
+          "passed": { "type": "boolean" },
+          "failures": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "input_query_hash_mismatch", "unacceptable_claim_verdict",
+                "citation_not_supported"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "outcome": { "enum": ["PASS", "FAIL"] }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "uniqueIds": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/id" },
+      "uniqueItems": true
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragproof.dev/schemas/incident-detail.schema.json",
+  "title": "RAGProof Incident Detail",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "diagnosis", "verification", "replay",
+    "regression_case", "lineage", "impact_reports", "timeline"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "diagnosis": { "type": "object" },
+    "verification": {
+      "oneOf": [
+        { "$ref": "#/$defs/verificationSummary" },
+        { "type": "null" }
+      ]
+    },
+    "replay": { "type": ["object", "null"] },
+    "regression_case": { "type": ["object", "null"] },
+    "lineage": { "type": ["object", "null"] },
+    "impact_reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["impact_id", "document_id", "from_version", "to_version", "usage_modes"],
+        "properties": {
+          "impact_id": { "$ref": "#/$defs/id" },
+          "document_id": { "$ref": "#/$defs/id" },
+          "from_version": { "type": "string", "minLength": 1 },
+          "to_version": { "type": "string", "minLength": 1 },
+          "usage_modes": {
+            "type": "array",
+            "items": { "enum": ["context", "retrieved_only", "citation"] },
+            "uniqueItems": true,
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "replay_id", "changed_at"],
+        "properties": {
+          "status": { "$ref": "#/$defs/status" },
+          "replay_id": { "type": ["string", "null"] },
+          "changed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "status": {
+      "type": "string",
+      "enum": ["suspected", "replaying", "confirmed", "rejected", "needs_review"]
+    },
+    "verificationSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["completed", "blocked_content_unavailable"] },
+        "blocked_reason": { "type": ["string", "null"] },
+        "trace_id": { "$ref": "#/$defs/id" },
+        "response_id": { "$ref": "#/$defs/id" },
+        "evaluator": { "type": "object" },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "verdict", "confidence", "evidence", "judge_disagreement"],
+            "properties": {
+              "claim_id": { "$ref": "#/$defs/id" },
+              "verdict": { "type": "string", "minLength": 1 },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "evidence": { "type": "array", "items": { "type": "object" } },
+              "judge_disagreement": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

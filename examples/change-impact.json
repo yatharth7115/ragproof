@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1.0",
+  "impact_id": "d89ebe39f44c0e0c91d5f1f683df8313b8a16bf94ab8a87d4c7d78ccc6d5ce9c",
+  "change_id": "c88c8e9fe27d9f395e974c06823fa8a01afc7d2cea4f391c3613edd246789bc7",
+  "tenant_id": "cuad-public",
+  "project_id": "cuad-contract-review",
+  "document_id": "cuad-contract-99dea8d7575f",
+  "change": {
+    "from_version": "cuad-v1:stale-index-snapshot",
+    "to_version": "cuad-v1:f8161d18bea4",
+    "version_changed": true,
+    "content_change": "unknown",
+    "from_chunk_hashes": [
+      "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e"
+    ],
+    "to_chunk_hashes": [
+      "b9a54335d30d3bc19f6433c14417f39a00e616df631ad77ac1ff4839c50cd74e"
+    ]
+  },
+  "summary": {
+    "affected_trace_count": 1,
+    "affected_answer_count": 1,
+    "affected_claim_count": 1,
+    "confirmed_incident_count": 1
+  },
+  "affected_traces": [
+    {
+      "trace_id": "af0e48b65b8894cf49fe64e98b9f36bd",
+      "response_id": "ca25cfc9f31e67c22412f4cee34c0fddc121560edd456cdd4b3412c4d60b21bd",
+      "usage_modes": [
+        "context",
+        "citation"
+      ],
+      "claim_ids": [
+        "189ec5f5b7c9477ae300202c59bca0a180e25e990d6d6b50c619d53502cce54f"
+      ],
+      "diagnoses": [
+        {
+          "diagnosis_id": "52b40b1277bc1dda36e131556b8ca3a13b70847236a1806400eebaccc440aa26",
+          "category": "STALE_KNOWLEDGE",
+          "status": "confirmed"
+        }
+      ]
+    }
+  ]
+}

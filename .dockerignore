@@ -1,0 +1,15 @@
+.git
+.venv
+.env
+.env.*
+data
+artifacts
+traces
+replays
+node_modules
+build
+dist
+**/__pycache__
+**/*.egg-info
+*.key
+*.pem
