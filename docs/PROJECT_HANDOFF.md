@@ -361,6 +361,8 @@ Checks run on **2026-10-03**, in the existing Python 3.10 development environmen
 
 The test run emitted a Starlette TestClient/httpx deprecation warning. It is not a test failure, but dependency compatibility should be addressed during packaging work.
 
+After publication, [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) for source snapshot `b09c4dcc1d11aa4fe4b4eeeb133956d487e7d3c8` failed at **Start the data plane**. Package installation succeeded, but the integration suite, regression promotion, and gate execution were skipped. The underlying service-startup cause was not diagnosed during this publication task. Do not describe remote CI as green; investigate its startup logs first.
+
 Earlier development recorded successful stage-specific and local integration checks, including a Stage 9 full run of 81 tests. The source has changed since then. Historical checks must not be substituted for a fresh all-enabled suite on this snapshot. No new live vendor, browser acceptance, production load, full backup/restore, or authenticated deployment validation is claimed here.
 
 ## 12. Security, privacy, and publication boundaries

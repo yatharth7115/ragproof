@@ -35,6 +35,8 @@ Recommended implementation:
 
 ### P0.2 Run the full integration suite against a disposable stack
 
+**New publication evidence:** [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) failed at **Start the data plane** after successful package installation. Integration tests and gate steps were skipped. Inspect the Compose startup/service logs to determine the cause before claiming a successful hosted CI run; it was not diagnosed during publication.
+
 Relevant files: `tests/*integration.py`, `infrastructure/docker-compose.lab.yml`, `src/ragproof_store/`.
 
 - Start PostgreSQL, Redis, and MinIO with health checks in an isolated test environment.
