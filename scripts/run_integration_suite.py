@@ -12,6 +12,17 @@ import subprocess
 import unittest
 
 
+class IntegrationResult(unittest.TextTestResult):
+    """Count successful methods separately from fixture and subtest errors."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.passed = 0
+
+    def addSuccess(self, test):
+        super().addSuccess(test)
+        self.passed += 1
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", type=Path, required=True)
@@ -21,14 +32,13 @@ def main() -> None:
 
     root = Path(__file__).resolve().parents[1]
     suite = unittest.defaultTestLoader.discover(str(root / "tests"))
-    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    result = unittest.TextTestRunner(verbosity=2, resultclass=IntegrationResult).run(suite)
     allowed_vendor_skips = {
         "test_external_client.LiveLangfuseReadTests.test_read_real_vendor_trace",
         "test_external_client.LiveLangsmithReadTests.test_read_real_vendor_trace",
     }
     skipped = [{"test": test.id(), "reason": reason} for test, reason in result.skipped]
     unexpected = [item for item in skipped if item["test"] not in allowed_vendor_skips]
-    passed = result.testsRun - len(result.failures) - len(result.errors) - len(skipped)
     commit = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True,
     ).stdout.strip()
@@ -39,7 +49,7 @@ def main() -> None:
         "dependencies": dict(sorted((dist.metadata["Name"], dist.version) for dist in distributions())),
         "storage_integration_enabled": True,
         "tests_run": result.testsRun,
-        "passed": passed,
+        "passed": result.passed,
         "failures": [test.id() for test, _ in result.failures],
         "errors": [test.id() for test, _ in result.errors],
         "skipped": skipped,

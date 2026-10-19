@@ -36,6 +36,7 @@ BEGIN
     INSERT INTO ragproof_event_outbox(payload) VALUES(event);
     RETURN NEW;
 END;
+$$;
 CREATE TRIGGER ragproof_trace_event AFTER INSERT ON ragproof_traces FOR EACH ROW EXECUTE FUNCTION ragproof_record_event();
 CREATE TRIGGER ragproof_verification_event AFTER INSERT ON ragproof_verifications FOR EACH ROW EXECUTE FUNCTION ragproof_record_event();
 CREATE TRIGGER ragproof_diagnosis_event AFTER INSERT ON ragproof_diagnoses FOR EACH ROW EXECUTE FUNCTION ragproof_record_event();
