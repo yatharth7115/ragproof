@@ -3,9 +3,11 @@
 Snapshot date: **2026-10-03**. Companion to [PROJECT_HANDOFF.md](PROJECT_HANDOFF.md). This is a prioritized engineering backlog, not a claim that every missing capability is required before demonstrating the local prototype.
 
 **Development update (2026-10-19):** P0.1 is implemented and covered by generated-key
-API tests. The current suite has 112 tests: 64 passed, 46 data-plane tests skipped,
-and two live-vendor tests skipped. The historical CI failure has been traced to
-the MinIO image pull. See [current validation and next steps](VALIDATION_2026-10-19.md)
+API and persistence tests. P0.2 now has hosted evidence: **114 passed/two live-vendor
+tests skipped**, both initially and against the same existing stack. The MinIO
+source build, migration fix, Python 3.10/3.12 wheel jobs, and quality gate passed
+in [run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542).
+See [current validation and next steps](VALIDATION_2026-10-19.md)
 and [credential setup](local-auth-setup.md). The original publication results below
 are retained as historical evidence.
 
@@ -35,8 +37,10 @@ denial, browser login/logout, expiration, and key/session revocation. Bootstrap
 imports no optional service dependencies. The offline command explicitly grants
 no access until an operator configures its record; it does not provision projects.
 See [local-auth-setup.md](local-auth-setup.md) for the existing first-ingestion
-project-creation behavior and stateless session limitations. A persisted
-authenticated smoke run against the full stack remains part of P0.2/P0.3.
+project-creation behavior and stateless session limitations. Generated-key
+authenticated persistence, browser login/logout, lineage reads, and reader/
+foreign-project denial now pass against the real laboratory data plane. The
+separate authenticated application Compose deployment remains part of P0.3.
 
 **Original evidence:** `pyproject.toml` registered `ragproof-admin = ragproof_store.admin:main`; `.env.example` directed users to it; `src/ragproof_store/admin.py` was absent.
 
@@ -53,7 +57,21 @@ Recommended implementation:
 
 ### P0.2 Run the full integration suite against a disposable stack
 
-**Diagnosed (2026-10-19):** [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) failed at **Start the data plane** after successful package installation. Job `111213244408` reports `pull access denied for minio/minio`; Redis/PostgreSQL pulls were interrupted. Integration tests and gate steps were skipped. Replace or build an available, reviewed object-store image and rerun the full stack before claiming success. Docker is unavailable in the current Windows development environment, so no all-enabled integration run is recorded for this update.
+**Verified (2026-10-19):** [run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542)
+started PostgreSQL, Redis, and source-built MinIO, then passed the full enabled
+suite twice against the same stack: 116 discovered, **114 passed/two live-vendor
+tests skipped** each time. Controlled faulty-candidate and empty-case gate tests
+passed; the final healthy gate passed all seven required failure categories.
+Summaries with source, dependencies, and skips are saved as CI artifacts. Tests
+exercise per-trace/case idempotence; production retention and capacity limits
+remain unmeasured.
+
+The original failure in [run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648)
+was the retired `minio/minio` image. A pinned upstream source build restored startup
+and exposed the missing closing delimiter in `0002_delivery.sql`. The migration
+could not previously commit through the migrator; its syntax was repaired.
+Existing checksum enforcement is preserved. Docker remains unavailable locally;
+the all-enabled evidence is from the disposable hosted Linux stack.
 
 Relevant files: `tests/*integration.py`, `infrastructure/docker-compose.lab.yml`, `src/ragproof_store/`.
 
@@ -75,6 +93,11 @@ bootstrap. The independent `unit-and-wheel` CI job targets Python 3.10 and 3.12;
 its addition alone is not proof of a hosted pass. See the current validation
 report for local installation results. Container startup, optional LangSmith
 installation, and a broader dependency matrix remain open.
+
+**Hosted follow-up:** base/full wheel checks and the installed-wheel suite passed
+on both Python 3.10 and 3.12 in run 39301460542. The MinIO dependency image built
+and became healthy. Building/running the RAGProof application image and the
+authenticated application Compose stack is the next remaining startup check.
 
 **Locally verified (2026-10-19):** separate clean base/full installations outside
 the checkout passed; all 13 CLI help commands resolved with local extras; the

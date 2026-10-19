@@ -2,8 +2,35 @@
 
 Starting source: `a79ace3d492f45e58efcbf1f6e6c4dcf58ac55e1` on `main`.
 Development branch: `fix/credential-bootstrap`.
-Environment: Windows, Python 3.12.14, dependencies installed with
+Initial local environment: Windows, Python 3.12.14, dependencies installed with
 `constraints.txt` and the `dev,api,otlp,storage,integrations` extras.
+
+## Current hosted result
+
+[Actions run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542)
+passed all three jobs for PR head `57171da6e7c4dc0999199ea175d51ad0c1e965ae`:
+
+| Check | Observed result |
+| --- | --- |
+| Unit and installed-wheel jobs | Passed on Python 3.10 and 3.12 |
+| PostgreSQL, Redis, and pinned-source MinIO startup | All healthy |
+| First enabled integration suite | 116 discovered: **114 passed, two live-vendor tests skipped**, zero failures/errors; 28.198 seconds |
+| Repeat against the same stack | **114 passed, two live-vendor tests skipped**, zero failures/errors; 28.357 seconds |
+| Generated-key persistence and browser sessions | Passed against actual PostgreSQL/S3/Redis, including scoped lineage reads and reader/foreign-project denial |
+| Controlled faulty-candidate gate | Expected FAIL verified by integration tests and CLI checks |
+| Empty regression set | Fail-closed behavior verified by integration tests |
+| Final healthy regression gate | PASS: seven cases, all seven required categories, zero failed cases |
+
+The final healthy candidate identity was
+`github-bbe1b747fcd023b1d1d8d849bdb2cc0f0c372265` (the PR merge checkout).
+Seven failure categories around the primary CUAD query are not seven independent
+questions or a broad-domain accuracy benchmark. The only skipped tests require
+real Langfuse/LangSmith accounts. The runner fails if any other test is skipped.
+
+Both runs' source/dependency/count summaries are retained in the
+[integration-summaries artifact](https://github.com/yatharth7115/ragproof/actions/runs/39301460542/artifacts/12211088866).
+Per-trace and replay/case idempotence checks passed again against existing state;
+this does not establish production retention, queue capacity, or load limits.
 
 ## What already exists
 
@@ -11,9 +38,9 @@ Environment: Windows, Python 3.12.14, dependencies installed with
 | --- | --- | --- |
 | Contracts and CUAD laboratory | Canonical schemas; original annotated fixture; deterministic healthy and fault scenarios | Contract/laboratory checks pass. Fault injection is controlled, not real customer incidents. |
 | OpenTelemetry | Span capture, canonical mapping, strict OTLP receiver, external canonical HTTP client | Local capture/protocol/client checks pass. An independently operated RAG app has not been validated. |
-| Evidence storage and processing | PostgreSQL/pgvector, S3-compatible objects, Redis streams, workers | Implementation exists; 46 data-plane-dependent tests were skipped in this environment. |
+| Evidence storage and processing | PostgreSQL/pgvector, S3-compatible objects, Redis streams, workers | All 48 data-plane tests now pass in hosted CI, including the two new authenticated persistence checks. |
 | Verification and diagnosis | Claim extraction, lexical/numeric verification, ranked root-cause hypotheses | Local checks pass; 96 positive annotations preserved. General hallucination precision/recall is unmeasured. |
-| Replay, impact, regressions, gate | One-variable CUAD replays, document lineage, case promotion, CLI/API gate | Code exists; fresh persistence/worker/gate integration remains pending. Coverage centers on one primary query. |
+| Replay, impact, regressions, gate | One-variable CUAD replays, document lineage, case promotion, CLI/API gate | Fresh and repeated hosted integration checks passed; final gate passed seven categories. Coverage centers on one primary query. |
 | Incident UI | Existing dark incident dashboard and detail assets | No new browser acceptance run. Sign-in, trace/gate workspaces, and accessibility work remain. |
 | Operations and integrations | Auth middleware, migrations, outbox, backups, vendor import adapters, Compose scaffolds | These require isolation/recovery/deployment checks. No live Langfuse/LangSmith validation. |
 
@@ -35,8 +62,18 @@ Environment: Windows, Python 3.12.14, dependencies installed with
 - Added `scripts/check_installed_package.py` and an independent CI job for Python
   3.10/3.12, covering base/full wheel installation outside the checkout, packaged
   resources, advertised CLI help, and tests against the installed wheel.
+- Replaced the retired MinIO image in both Compose stacks with a local build of
+  upstream commit `9e49d5e7a648f00e26f2246f4dc28e6b07f8c84a`, including its license.
+  Startup is verified in CI. Community MinIO is archived; this restores the lab
+  dependency rather than selecting a maintained production object store.
+- Repaired the missing closing `$$` in the never-valid delivery migration. Its
+  original syntax could not commit through the transactional migrator. Checksums
+  for valid applied migrations are still enforced; no volumes were wiped.
+- Added two real data-plane authentication tests and a CI runner that rejects
+  unintended skips and saves summaries. Two runner tests verify accurate success
+  counts when fixtures or multiple subtests fail.
 
-## Checks actually run
+## Earlier local checks
 
 | Check | Result |
 | --- | --- |
@@ -60,10 +97,11 @@ warning. The eight-hour session expiry, removal of a key record, and signing
 secret changes are tested directly; browser logout only clears the current
 cookie and does not revoke a copied cookie server-side.
 
-The suite required execution outside the Windows sandbox because the sandbox
+The local suite required execution outside the Windows sandbox because the sandbox
 blocked the local sockets used by asyncio/TestClient. No product workaround was
 added for that environment restriction. Docker is unavailable on this machine;
-the data-plane tests were not enabled.
+the data-plane tests were not enabled locally. The later hosted evidence above
+supersedes those local skips for data-plane validation.
 
 ### Reproduce installation checks
 
@@ -99,16 +137,19 @@ pull access denied for minio/minio, repository does not exist or may require 'do
 ```
 
 The PostgreSQL and Redis image pulls were interrupted after the MinIO pull
-failed. The integration suite, promotion, and gate did not run. No available
-replacement image or successful container startup is claimed in this update.
-The new unit/wheel job is independent of that failing data-plane startup.
+failed. The integration suite, promotion, and gate did not run in that historical
+run. The pinned source build restored startup in run 39300755745 and exposed the
+invalid delivery migration. After the migration repair, run 39301460542 passed
+startup, both integration suites, promotion, and the final gate. The unit/wheel
+job remains independent of data-plane startup.
 
 ## What is left, in order
 
-1. Resolve the unavailable MinIO image using a reviewed, available build/image;
-   run a disposable Docker stack, all 46 data-plane tests, authenticated persisted
-   ingestion, and both healthy/faulty gate candidates. Preserve existing volumes.
-2. Finish container readiness, authenticated app-stack startup, optional LangSmith
+1. Build/run the RAGProof application image, validate its readiness behavior, and
+   start the authenticated application Compose stack with deliberately configured
+   secrets. The existing hosted evidence runs the API/tests against the lab data
+   plane; it does not prove the separate application deployment.
+2. Finish optional LangSmith
    installation checks, and the dependency matrix/deprecation work. Verify new
    hosted CI results; adding a workflow is not a green run.
 3. Extend tenant/project isolation and privacy tests across every resource; finish

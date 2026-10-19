@@ -2,9 +2,13 @@
 
 Snapshot date: **2026-10-03**. This document describes the source snapshot prepared for the first GitHub publication, not a claim of production readiness. Read [REMAINING_WORK.md](REMAINING_WORK.md) immediately after this document.
 
-**Current continuation (2026-10-19):** credential bootstrap is implemented, the
-current suite reports 64 passed/48 skipped, and the hosted startup failure is
-diagnosed as a MinIO image-pull denial. Read
+**Current continuation (2026-10-19):** credential bootstrap, the MinIO source
+build, and the previously invalid delivery migration are repaired.
+[Hosted run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542)
+passed all three jobs: Python 3.10/3.12 unit/wheel checks plus the full data-plane
+job. First and repeated integration runs each report **114 passed/two live-vendor
+tests skipped**. Authenticated persistence and the seven-category quality gate
+passed. Read
 [VALIDATION_2026-10-19.md](VALIDATION_2026-10-19.md) and
 [local-auth-setup.md](local-auth-setup.md) for current behavior, installation
 checks, and next steps. Historical publication evidence remains below.
@@ -239,7 +243,10 @@ Repaired on 2026-10-19: the previously missing `ragproof_store.admin` module now
 implements `ragproof-admin create-key`. See [credential setup](local-auth-setup.md)
 for output handling, explicit project scope, rotation, and revocation. Generated-key
 API tests cover authorization using an in-memory recording repository; full
-data-plane security validation is still required.
+data-plane security validation is still required. Additional generated-key
+integration tests now verify actual PostgreSQL/S3 persistence, browser sessions,
+lineage reads, and reader/foreign-project denial against the real laboratory
+stack. This is not yet a route-by-route security audit.
 
 ## 7. Source map and ownership boundaries
 
@@ -372,7 +379,7 @@ Checks run on **2026-10-03**, in the existing Python 3.10 development environmen
 
 The test run emitted a Starlette TestClient/httpx deprecation warning. It is not a test failure, but dependency compatibility should be addressed during packaging work.
 
-After publication, [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) for source snapshot `b09c4dcc1d11aa4fe4b4eeeb133956d487e7d3c8` failed at **Start the data plane**. Package installation succeeded, but the integration suite, regression promotion, and gate execution were skipped. On 2026-10-19, inspection of job `111213244408` identified `pull access denied for minio/minio`, with the other image pulls interrupted. The image/startup issue remains open; remote CI is not verified green.
+After publication, [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) for source snapshot `b09c4dcc1d11aa4fe4b4eeeb133956d487e7d3c8` failed at **Start the data plane**. Package installation succeeded, but the integration suite, regression promotion, and gate execution were skipped. On 2026-10-19, inspection of job `111213244408` identified `pull access denied for minio/minio`, with the other image pulls interrupted. Both Compose stacks now build pinned MinIO source. The first successful startup exposed a missing closing `$$` in `0002_delivery.sql`; that never-valid migration was repaired. [Run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542) subsequently passed startup, both enabled integration runs, and the confirmed-regression gate. See the current validation report for exact scope and remaining limitations.
 
 Earlier development recorded successful stage-specific and local integration checks, including a Stage 9 full run of 81 tests. The source has changed since then. Historical checks must not be substituted for a fresh all-enabled suite on this snapshot. No new live vendor, browser acceptance, production load, full backup/restore, or authenticated deployment validation is claimed here.
 
