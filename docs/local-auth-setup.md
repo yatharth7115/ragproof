@@ -65,8 +65,10 @@ docker compose --env-file .env -f infrastructure/docker-compose.app.yml up -d --
 ```
 
 This is the intended startup command, not evidence of a completed deployment
-test. The currently pinned MinIO image failed to pull in the recorded hosted CI
-run; see `REMAINING_WORK.md` P0.2 before attempting full-stack validation.
+test. Both Compose files now build MinIO from a pinned upstream source commit;
+the first build takes longer than pulling a prebuilt image. See
+`infrastructure/minio/README.md` for source/version details and the current
+validation report for actual full-stack test evidence.
 
 `GET /auth/status` reports whether authentication is required. API clients send
 the raw key as `Authorization: Bearer <key>`. Browser clients can POST
