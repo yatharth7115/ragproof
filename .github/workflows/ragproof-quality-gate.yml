@@ -6,6 +6,44 @@ on:
     branches: [main]
 
 jobs:
+  unit-and-wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Build package and dependency wheels
+        run: >-
+          python -m pip wheel -c constraints.txt
+          '.[dev,api,otlp,storage,integrations]'
+          --wheel-dir "$RUNNER_TEMP/ragproof-wheels"
+
+      - name: Verify base installation outside checkout
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -m venv ragproof-base
+          ragproof-base/bin/python -m pip install --no-index --find-links ragproof-wheels ragproof-mvp
+          ragproof-base/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_package.py" --base
+
+      - name: Verify full installation outside checkout
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -m venv ragproof-full
+          ragproof-full/bin/python -m pip install --no-index --find-links ragproof-wheels 'ragproof-mvp[dev,api,otlp,storage,integrations]'
+          ragproof-full/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_package.py"
+          ragproof-full/bin/python -m pip check
+
+      - name: Run tests against installed wheel
+        run: '"$RUNNER_TEMP/ragproof-full/bin/python" -m unittest discover -s tests -v'
+
   real-data-quality-gate:
     runs-on: ubuntu-latest
     timeout-minutes: 20

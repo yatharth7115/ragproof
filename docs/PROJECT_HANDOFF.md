@@ -2,13 +2,20 @@
 
 Snapshot date: **2026-10-03**. This document describes the source snapshot prepared for the first GitHub publication, not a claim of production readiness. Read [REMAINING_WORK.md](REMAINING_WORK.md) immediately after this document.
 
+**Current continuation (2026-10-19):** credential bootstrap is implemented, the
+current suite reports 64 passed/48 skipped, and the hosted startup failure is
+diagnosed as a MinIO image-pull denial. Read
+[VALIDATION_2026-10-19.md](VALIDATION_2026-10-19.md) and
+[local-auth-setup.md](local-auth-setup.md) for current behavior, installation
+checks, and next steps. Historical publication evidence remains below.
+
 ## 1. Executive summary
 
 RAGProof is a **vendor-neutral RAG reliability and debugging layer**. It records the evidence used by a retrieval-augmented generation application, checks whether the answer's claims are supported by that evidence, identifies likely pipeline failures, tests a controlled repair, and turns confirmed failures into regression checks.
 
 The intended product complements Langfuse, LangSmith, and OpenTelemetry rather than replacing their tracing products. The proposed differentiator is the linked workflow **claim → evidence → suspected cause → controlled replay → affected answers → regression gate**. This is a product hypothesis, not an independently established claim of market novelty or defensibility.
 
-The repository contains a substantial local, real-data prototype: a deterministic CUAD RAG laboratory, instrumentation, storage, claim verification, diagnosis, replay, impact analysis, a dark incident dashboard, a CI quality gate, and an external OTLP receiver. Additional security, delivery, packaging, backup, and vendor-import work is present but not fully validated. In particular, the advertised `ragproof-admin` command has no implementation module in this snapshot.
+The repository contains a substantial local, real-data prototype: a deterministic CUAD RAG laboratory, instrumentation, storage, claim verification, diagnosis, replay, impact analysis, a dark incident dashboard, a CI quality gate, and an external OTLP receiver. Additional security, delivery, packaging, backup, and vendor-import work is present but not fully validated. The publication snapshot lacked `ragproof-admin`; credential generation and validation were added on 2026-10-19.
 
 **Do not describe the repository as a finished SaaS, a general hallucination detector, or a fully tested production system.** A supported claim is supported by captured evidence under a specific verifier; it is not necessarily objectively true.
 
@@ -228,7 +235,11 @@ The previous broad “finish everything” implementation pass was interrupted. 
 - `backup.py`: database/content/queue backup and empty-target restore tooling, checksums and explicit apply/quiescence controls. A successful restore drill is not recorded.
 - `Dockerfile`, `docker-compose.app.yml`, `constraints.txt`, `.env.example`, `Makefile`: self-hosted setup and constrained installation scaffolding.
 
-Known concrete defect: `pyproject.toml` registers `ragproof-admin = ragproof_store.admin:main`, and `.env.example` refers to it, but **`src/ragproof_store/admin.py` does not exist**. Do not tell the user to run this command successfully before implementing and testing it.
+Repaired on 2026-10-19: the previously missing `ragproof_store.admin` module now
+implements `ragproof-admin create-key`. See [credential setup](local-auth-setup.md)
+for output handling, explicit project scope, rotation, and revocation. Generated-key
+API tests cover authorization using an in-memory recording repository; full
+data-plane security validation is still required.
 
 ## 7. Source map and ownership boundaries
 
@@ -361,7 +372,7 @@ Checks run on **2026-10-03**, in the existing Python 3.10 development environmen
 
 The test run emitted a Starlette TestClient/httpx deprecation warning. It is not a test failure, but dependency compatibility should be addressed during packaging work.
 
-After publication, [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) for source snapshot `b09c4dcc1d11aa4fe4b4eeeb133956d487e7d3c8` failed at **Start the data plane**. Package installation succeeded, but the integration suite, regression promotion, and gate execution were skipped. The underlying service-startup cause was not diagnosed during this publication task. Do not describe remote CI as green; investigate its startup logs first.
+After publication, [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) for source snapshot `b09c4dcc1d11aa4fe4b4eeeb133956d487e7d3c8` failed at **Start the data plane**. Package installation succeeded, but the integration suite, regression promotion, and gate execution were skipped. On 2026-10-19, inspection of job `111213244408` identified `pull access denied for minio/minio`, with the other image pulls interrupted. The image/startup issue remains open; remote CI is not verified green.
 
 Earlier development recorded successful stage-specific and local integration checks, including a Stage 9 full run of 81 tests. The source has changed since then. Historical checks must not be substituted for a fresh all-enabled suite on this snapshot. No new live vendor, browser acceptance, production load, full backup/restore, or authenticated deployment validation is claimed here.
 

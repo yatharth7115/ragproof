@@ -4,13 +4,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import hmac
-import json
 import os
 import secrets
 import time
 from urllib.parse import urlsplit
 
 from fastapi import HTTPException, Request
+
+from .credentials import load_credentials, validate_credentials
 
 
 @dataclass(frozen=True)
@@ -32,16 +33,14 @@ class AccessControl:
         self.mode = mode or os.getenv("RAGPROOF_AUTH_MODE", "local")
         if self.mode not in {"local", "token"}:
             raise ValueError("RAGPROOF_AUTH_MODE must be local or token")
-        self.keys = keys if keys is not None else json.loads(os.getenv("RAGPROOF_API_KEYS_JSON", "[]"))
+        self.keys = (
+            validate_credentials(keys) if keys is not None
+            else load_credentials(os.getenv("RAGPROOF_API_KEYS_JSON", "[]"))
+        )
         self.secret = secret if secret is not None else os.getenv("RAGPROOF_SESSION_SECRET", "")
         self.cookie_secure = cookie_secure if cookie_secure is not None else os.getenv("RAGPROOF_COOKIE_SECURE", "true").lower() == "true"
         if self.mode == "token" and (not self.keys or len(self.secret) < 32):
             raise ValueError("Token mode requires API key hashes and a session secret of at least 32 characters")
-        for entry in self.keys:
-            if set(entry) != {"key_hash", "tenant_id", "project_id", "role"}:
-                raise ValueError("Each API credential requires key_hash, tenant_id, project_id, role")
-            if entry["role"] not in {"reader", "writer", "admin"} or len(entry["key_hash"]) != 64:
-                raise ValueError("Invalid API credential hash or role")
 
     def authenticate_key(self, key: str) -> Principal | None:
         digest = hashlib.sha256(key.encode()).hexdigest()
