@@ -23,8 +23,14 @@ release. Start with these two detailed documents:
 Publication-day checks (2026-10-03): 54 tests passed and 48 infrastructure tests
 were skipped. Real-CUAD positive support preservation passed for 96 original
 annotations; this is not a hallucination-accuracy benchmark. Recent hardening
-needs full validation, and the registered `ragproof-admin` implementation is
-currently missing. See the handoff for exact limitations.
+needs full validation. Credential bootstrap is now implemented; see
+[local credential setup](docs/local-auth-setup.md) for key generation, scope,
+rotation, and session limitations. See the handoff for remaining limitations.
+Current hosted checks (2026-10-19): **114 tests passed, two live-vendor tests
+skipped**, on both the first run and a repeat against the same data plane.
+Base/full wheel checks passed on Python 3.10 and 3.12. The MinIO startup and
+delivery-migration blockers are repaired. See the
+[validation report and next steps](docs/VALIDATION_2026-10-19.md).
 
 Stage 0 defines the MVP contract. Stage 1 adds a deterministic RAG laboratory
 over real CUAD data. Stage 2 instruments the complete pipeline with

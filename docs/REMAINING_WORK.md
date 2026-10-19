@@ -2,11 +2,20 @@
 
 Snapshot date: **2026-10-03**. Companion to [PROJECT_HANDOFF.md](PROJECT_HANDOFF.md). This is a prioritized engineering backlog, not a claim that every missing capability is required before demonstrating the local prototype.
 
+**Development update (2026-10-19):** P0.1 is implemented and covered by generated-key
+API and persistence tests. P0.2 now has hosted evidence: **114 passed/two live-vendor
+tests skipped**, both initially and against the same existing stack. The MinIO
+source build, migration fix, Python 3.10/3.12 wheel jobs, and quality gate passed
+in [run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542).
+See [current validation and next steps](VALIDATION_2026-10-19.md)
+and [credential setup](local-auth-setup.md). The original publication results below
+are retained as historical evidence.
+
 ## 1. Where we actually are
 
 The local evidence → verification → diagnosis → replay → regression workflow exists over a pinned real CUAD subset. A dark incident dashboard and strict OTLP receiver exist. The later security, packaging, recovery, backup, and vendor-import pass left partially finished work.
 
-The publication-day check discovered 102 tests: **54 passed, 48 infrastructure-dependent tests skipped**. A separate real-data evaluation preserved all 96 unchanged CUAD annotations (109 claims). Neither result establishes general hallucination detection accuracy or production readiness. The registered `ragproof-admin` entry point currently fails because `ragproof_store.admin` is missing.
+The publication-day check discovered 102 tests: **54 passed, 48 skipped**. A separate real-data evaluation preserved all 96 unchanged CUAD annotations (109 claims). Neither result establishes general hallucination detection accuracy or production readiness. The then-missing `ragproof-admin` implementation was repaired on 2026-10-19.
 
 Use three release levels:
 
@@ -20,7 +29,20 @@ Finish level 1 before advertising levels 2 or 3. No provider API key is required
 
 ### P0.1 Implement or remove the broken administration command
 
-**Evidence:** `pyproject.toml` registers `ragproof-admin = ragproof_store.admin:main`; `.env.example` directs users to it; `src/ragproof_store/admin.py` is absent.
+**Implemented (2026-10-19):** `ragproof-admin create-key` now requires tenant,
+project, and role, prints a random key once on stderr, and emits only its hashed
+record on stdout. Shared validation rejects malformed hashes, scopes, roles,
+JSON structures, and duplicate hashes. Tests cover all roles, foreign-scope
+denial, browser login/logout, expiration, and key/session revocation. Bootstrap
+imports no optional service dependencies. The offline command explicitly grants
+no access until an operator configures its record; it does not provision projects.
+See [local-auth-setup.md](local-auth-setup.md) for the existing first-ingestion
+project-creation behavior and stateless session limitations. Generated-key
+authenticated persistence, browser login/logout, lineage reads, and reader/
+foreign-project denial now pass against the real laboratory data plane. The
+separate authenticated application Compose deployment remains part of P0.3.
+
+**Original evidence:** `pyproject.toml` registered `ragproof-admin = ragproof_store.admin:main`; `.env.example` directed users to it; `src/ragproof_store/admin.py` was absent.
 
 Recommended implementation:
 
@@ -35,7 +57,21 @@ Recommended implementation:
 
 ### P0.2 Run the full integration suite against a disposable stack
 
-**New publication evidence:** [GitHub Actions run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648) failed at **Start the data plane** after successful package installation. Integration tests and gate steps were skipped. Inspect the Compose startup/service logs to determine the cause before claiming a successful hosted CI run; it was not diagnosed during publication.
+**Verified (2026-10-19):** [run 39301460542](https://github.com/yatharth7115/ragproof/actions/runs/39301460542)
+started PostgreSQL, Redis, and source-built MinIO, then passed the full enabled
+suite twice against the same stack: 116 discovered, **114 passed/two live-vendor
+tests skipped** each time. Controlled faulty-candidate and empty-case gate tests
+passed; the final healthy gate passed all seven required failure categories.
+Summaries with source, dependencies, and skips are saved as CI artifacts. Tests
+exercise per-trace/case idempotence; production retention and capacity limits
+remain unmeasured.
+
+The original failure in [run 37126668648](https://github.com/yatharth7115/ragproof/actions/runs/37126668648)
+was the retired `minio/minio` image. A pinned upstream source build restored startup
+and exposed the missing closing delimiter in `0002_delivery.sql`. The migration
+could not previously commit through the migrator; its syntax was repaired.
+Existing checksum enforcement is preserved. Docker remains unavailable locally;
+the all-enabled evidence is from the disposable hosted Linux stack.
 
 Relevant files: `tests/*integration.py`, `infrastructure/docker-compose.lab.yml`, `src/ragproof_store/`.
 
@@ -50,6 +86,24 @@ Relevant files: `tests/*integration.py`, `infrastructure/docker-compose.lab.yml`
 **Acceptance:** one fresh all-enabled run with no unintended skips/failures; a repeated run does not depend on stale state or explode record counts; the healthy candidate passes the declared policy and the faulty candidate fails it. Do not call seven categories seven independent queries.
 
 ### P0.3 Prove fresh-install and wheel behavior
+
+The new `scripts/check_installed_package.py` checks installed-wheel resources,
+CLI help, real-CUAD laboratory/capture/evaluation, and secret-safe credential
+bootstrap. The independent `unit-and-wheel` CI job targets Python 3.10 and 3.12;
+its addition alone is not proof of a hosted pass. See the current validation
+report for local installation results. Container startup, optional LangSmith
+installation, and a broader dependency matrix remain open.
+
+**Hosted follow-up:** base/full wheel checks and the installed-wheel suite passed
+on both Python 3.10 and 3.12 in run 39301460542. The MinIO dependency image built
+and became healthy. Building/running the RAGProof application image and the
+authenticated application Compose stack is the next remaining startup check.
+
+**Locally verified (2026-10-19):** separate clean base/full installations outside
+the checkout passed; all 13 CLI help commands resolved with local extras; the
+installed wheel's suite reported 64 passed and 48 skipped. Packaged resources,
+healthy CUAD execution, and credential generation were exercised in both
+installations. These checks do not close container or data-plane acceptance.
 
 Relevant files: `pyproject.toml`, `setup.py`, `MANIFEST.in`, `constraints.txt`, `ragproof_resources`, `Dockerfile`, `Makefile`.
 

@@ -6,9 +6,47 @@ on:
     branches: [main]
 
 jobs:
+  unit-and-wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Build package and dependency wheels
+        run: >-
+          python -m pip wheel -c constraints.txt
+          '.[dev,api,otlp,storage,integrations]'
+          --wheel-dir "$RUNNER_TEMP/ragproof-wheels"
+
+      - name: Verify base installation outside checkout
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -m venv ragproof-base
+          ragproof-base/bin/python -m pip install --no-index --find-links ragproof-wheels ragproof-mvp
+          ragproof-base/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_package.py" --base
+
+      - name: Verify full installation outside checkout
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -m venv ragproof-full
+          ragproof-full/bin/python -m pip install --no-index --find-links ragproof-wheels 'ragproof-mvp[dev,api,otlp,storage,integrations]'
+          ragproof-full/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_package.py"
+          ragproof-full/bin/python -m pip check
+
+      - name: Run tests against installed wheel
+        run: '"$RUNNER_TEMP/ragproof-full/bin/python" -m unittest discover -s tests -v'
+
   real-data-quality-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
 
@@ -18,15 +56,23 @@ jobs:
           cache: pip
 
       - name: Install RAGProof
-        run: python -m pip install -e '.[dev,api,otlp,storage]'
+        run: python -m pip install -c constraints.txt -e '.[dev,api,otlp,storage,integrations]'
+
+      - name: Validate data-plane configuration
+        run: docker compose -f infrastructure/docker-compose.lab.yml config --quiet
 
       - name: Start the data plane
-        run: docker compose -f infrastructure/docker-compose.lab.yml up -d --wait
+        run: docker compose -f infrastructure/docker-compose.lab.yml up -d --build --wait --wait-timeout 180
 
       - name: Run real-CUAD integration suite
         env:
           RAGPROOF_RUN_STORAGE_INTEGRATION: "1"
-        run: python -m unittest discover -s tests -v
+        run: python scripts/run_integration_suite.py --report artifacts/integration-first.json
+
+      - name: Repeat integration suite against existing state
+        env:
+          RAGPROOF_RUN_STORAGE_INTEGRATION: "1"
+        run: python scripts/run_integration_suite.py --report artifacts/integration-repeat.json
 
       - name: Promote all confirmed real-data replays
         run: ragproof-regression-worker --backfill-confirmed
@@ -44,6 +90,14 @@ jobs:
           --required-category GENERATION_FAILURE
           --required-category CITATION_FAILURE
           --required-category STALE_KNOWLEDGE
+
+      - name: Preserve integration summaries
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-summaries
+          path: artifacts/integration-*.json
+          if-no-files-found: ignore
 
       - name: Show service logs on failure
         if: failure()
